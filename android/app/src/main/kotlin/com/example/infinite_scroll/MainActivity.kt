@@ -1,4 +1,4 @@
-package com.example.infinite_scroll
+package com.digitalturbine.tiktok_digitalturbine
 
 import io.flutter.embedding.android.FlutterActivity
 

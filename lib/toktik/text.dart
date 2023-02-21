@@ -1,36 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll/utils.dart';
+import 'package:tiktok_digitalturbine/models/ad_model.dart';
+import 'package:tiktok_digitalturbine/models/video_model.dart';
+import 'package:tiktok_digitalturbine/toktik/ad_box.dart';
 
 class TokTikText extends StatelessWidget {
-  const TokTikText({Key? key}) : super(key: key);
+  final Video videoObject;
+
+  const TokTikText(this.videoObject, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomLeft,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("@author"),
-          Container(height: 8),
-          const TokTikTitleAndTags(
-              title: "title", tags: ["#lit", "#fuego", "#omg"]),
-          // Text("See Translation"),
-          Row(
-            children: const [
-              Icon(Icons.music_note),
-              Flexible(
-                child: Text(
-                  // "My Heart Will Go On - Titanic Original Motion Picture Soundtrack",
-                  "My Heart Will Go On",
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                ),
-              )
-            ],
-          ),
-        ],
+      child: FractionallySizedBox(
+        widthFactor: 0.8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              videoObject.author,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            // Container(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+              child: TokTikTitleAndTags(
+                title: videoObject.title,
+                tags: videoObject.tags,
+              ),
+            ),
+            // Text("See Translation"),
+            if (videoObject.song.isNotEmpty)
+              Row(
+                children: [
+                  const Icon(Icons.music_note),
+                  Flexible(
+                    child: Text(
+                      videoObject.song,
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
+                    ),
+                  )
+                ],
+              ),
+            if (videoObject is Ad) const SizedBox(height: 8),
+            if (videoObject is Ad) TokTikAdBox(videoObject as Ad),
+          ],
+        ),
       ),
     );
   }
@@ -46,15 +63,17 @@ class TokTikTitleAndTags extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
+      spacing: 4.0,
       children: [
         Text(title),
         ...List<Widget>.generate(
-            tags.length * 2,
-            (i) => i % 2 == 0
-                ? Container(width: 4)
-                : Text(tags[(i / 2).floor()],
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-            growable: false)
+          tags.length,
+          (i) => Text(
+            tags[i],
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          growable: false,
+        )
       ],
     );
   }

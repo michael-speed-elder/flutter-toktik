@@ -1,71 +1,61 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll/toktik/buttons.dart';
-import 'package:infinite_scroll/toktik/text.dart';
-import 'package:infinite_scroll/toktik/toptabs.dart';
-import 'package:infinite_scroll/utils.dart';
+import 'package:tiktok_digitalturbine/models/video_model.dart';
+import 'package:tiktok_digitalturbine/toktik/buttons.dart';
+import 'package:tiktok_digitalturbine/toktik/progress.dart';
+import 'package:tiktok_digitalturbine/toktik/text.dart';
+import 'package:tiktok_digitalturbine/toktik/video.dart';
 
-String getRandomImage() {
-  const List<String> urls = [
-    'https://media.giphy.com/media/DvXQYuGWQ34v6/giphy.gif',
-    'https://media.giphy.com/media/DvXQYuGWQ34v6/giphy.gif',
-    'https://media.giphy.com/media/5SAPlGAS1YnLN9jHua/giphy.gif',
-    'https://media.giphy.com/media/semLgqWI3U3qU/giphy.gif',
-    'https://media.giphy.com/media/IEkkhUSoBfbPy/giphy.gif',
-    'https://media.giphy.com/media/IEkkhUSoBfbPy/giphy.gif',
-    'https://media.giphy.com/media/PmA0EJVGQXHnHt944d/giphy.gif',
-    'https://images.unsplash.com/photo-1656019206311-8ba4153cfefb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1450&q=80'
-  ];
-  return urls[Random().nextInt(urls.length)];
-}
+callback(double progress) {}
 
-class TokTikCell extends StatelessWidget {
-  const TokTikCell({Key? key}) : super(key: key);
+class TokTikCell extends StatefulWidget {
+  final Video videoObject;
+
+  const TokTikCell(this.videoObject, {super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      // color: randomColor(),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          // alignment: Alignment.center,
-          fit: BoxFit.cover,
-          image: NetworkImage(getRandomImage()),
-        ),
-      ),
-      height: MediaQuery.of(context).size.height - 80,
-      padding: const EdgeInsets.all(8.0),
-      child: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.transparent, Colors.transparent],
-          ),
-        ),
-        child: Stack(
-          fit: StackFit.expand,
-          children: const [
-            TokTikTopTabs(),
-            TopTikVolume(),
-            TokTikText(),
-            TokTikButtons()
-          ],
-        ),
-      ),
-    );
+  State<TokTikCell> createState() => _TokTikCellState();
+}
+
+class _TokTikCellState extends State<TokTikCell> {
+  updateProgress(double videoProgress) {
+    setState(() {
+      progress = videoProgress;
+    });
   }
-}
 
-class TopTikVolume extends StatelessWidget {
-  const TopTikVolume({Key? key}) : super(key: key);
+  double progress = 0;
 
   @override
   Widget build(BuildContext context) {
-    return const Align(
-      alignment: Alignment.topRight,
-      child: Icon(Icons.volume_up),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 80,
+      // padding: const EdgeInsets.fromLTRB(8, 32, 8, 8),
+      child: Stack(
+        // fit: StackFit.expand,
+        children: [
+          TokTikVideo(widget.videoObject.video, updateProgress),
+          DecoratedBox(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.transparent, Colors.transparent],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 40, 8, 12),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  TokTikText(widget.videoObject),
+                  TokTikButtons(widget.videoObject),
+                ],
+              ),
+            ),
+          ),
+          TokTikProgress(progress),
+        ],
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_digitalturbine/toktik/search.dart';
 
 class TokTikTopTabs extends StatelessWidget {
   const TokTikTopTabs({Key? key}) : super(key: key);
@@ -7,16 +8,36 @@ class TokTikTopTabs extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: const [
-          Text("Following"),
-          SizedBox(width: 8),
-          Text(
-            "For you",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 48, 12, 0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Opacity(opacity: 0, child: TopTikSearch()),
+            const Expanded(child: SizedBox()),
+            const Text("Following"),
+            const SizedBox(width: 16),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text("For You",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(999))),
+                  height: 3,
+                  width: 24,
+                ),
+              ],
+            ),
+            const Expanded(child: SizedBox()),
+            const TopTikSearch(),
+          ],
+        ),
       ),
     );
   }
